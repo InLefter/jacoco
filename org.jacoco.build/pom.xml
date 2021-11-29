@@ -95,9 +95,9 @@
     <module>../org.jacoco.examples</module>
     <module>../jacoco-maven-plugin</module>
 
-    <module>../org.jacoco.tests</module>
+<!--    <module>../org.jacoco.tests</module>-->
 
-    <module>../org.jacoco.doc</module>
+<!--    <module>../org.jacoco.doc</module>-->
     <module>../jacoco</module>
   </modules>
 
@@ -569,51 +569,51 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <configuration>
-          <java>
-            <lineEndings>UNIX</lineEndings>
-            <includes>
-              <include>src/**/*.java</include>
-            </includes>
-            <eclipse>
-              <version>4.12.0</version>
-              <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>
-            </eclipse>
-            <trimTrailingWhitespace/>
-            <endWithNewline/>
-          </java>
-          <formats>
-            <format>
-              <includes>
-                <include>**/*.properties</include>
-                <include>**/*.html</include>
-                <include>**/*.css</include>
-                <include>**/*.js</include>
-                <include>**/*.xml</include>
-                <include>**/*.xsl</include>
-                <include>**/*.dtd</include>
-              </includes>
-              <excludes>
-                <exclude>target/**</exclude>
-              </excludes>
-              <lineEndings>UNIX</lineEndings>
-              <trimTrailingWhitespace/>
-              <endWithNewline/>
-            </format>
-          </formats>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>com.diffplug.spotless</groupId>-->
+<!--        <artifactId>spotless-maven-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <java>-->
+<!--            <lineEndings>UNIX</lineEndings>-->
+<!--            <includes>-->
+<!--              <include>src/**/*.java</include>-->
+<!--            </includes>-->
+<!--            <eclipse>-->
+<!--              <version>4.12.0</version>-->
+<!--              <file>../org.jacoco.core/.settings/org.eclipse.jdt.core.prefs</file>-->
+<!--            </eclipse>-->
+<!--            <trimTrailingWhitespace/>-->
+<!--            <endWithNewline/>-->
+<!--          </java>-->
+<!--          <formats>-->
+<!--            <format>-->
+<!--              <includes>-->
+<!--                <include>**/*.properties</include>-->
+<!--                <include>**/*.html</include>-->
+<!--                <include>**/*.css</include>-->
+<!--                <include>**/*.js</include>-->
+<!--                <include>**/*.xml</include>-->
+<!--                <include>**/*.xsl</include>-->
+<!--                <include>**/*.dtd</include>-->
+<!--              </includes>-->
+<!--              <excludes>-->
+<!--                <exclude>target/**</exclude>-->
+<!--              </excludes>-->
+<!--              <lineEndings>UNIX</lineEndings>-->
+<!--              <trimTrailingWhitespace/>-->
+<!--              <endWithNewline/>-->
+<!--            </format>-->
+<!--          </formats>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>prepare-package</phase>-->
+<!--            <goals>-->
+<!--              <goal>check</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
