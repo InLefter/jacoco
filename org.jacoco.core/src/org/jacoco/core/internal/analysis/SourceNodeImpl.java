@@ -17,12 +17,16 @@ import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
 
+import java.util.Arrays;
+
 /**
  * Implementation of {@link ISourceNode}.
  */
 public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
 	private LineImpl[] lines;
+
+	private int[] incLines = new int[]{3, 4, 5, 6, 7};
 
 	/** first line number in {@link #lines} */
 	private int offset;
@@ -127,7 +131,14 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		final LineImpl l = getLine(line);
 		final int oldTotal = l.getInstructionCounter().getTotalCount();
 		final int oldCovered = l.getInstructionCounter().getCoveredCount();
-		lines[line - offset] = l.increment(instructions, branches);
+		boolean isDiffLine = false;
+		if (l == LineImpl.EMPTY) {
+			//
+			isDiffLine = incLines != null && Arrays.binarySearch(incLines, line) >= 0;
+		} else {
+			isDiffLine = l.isDiffLine();
+		}
+		lines[line - offset] = l.increment(instructions, branches, isDiffLine);
 
 		// Increment line counter:
 		if (instructions.getTotalCount() > 0) {
@@ -135,14 +146,23 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 				if (oldTotal == 0) {
 					lineCounter = lineCounter
 							.increment(CounterImpl.COUNTER_1_0);
+					if (isDiffLine) {
+						incLineCounter = incLineCounter.increment(CounterImpl.COUNTER_1_0);
+					}
 				}
 			} else {
 				if (oldTotal == 0) {
 					lineCounter = lineCounter
 							.increment(CounterImpl.COUNTER_0_1);
+					if (isDiffLine) {
+						incLineCounter = incLineCounter.increment(CounterImpl.COUNTER_0_1);
+					}
 				} else {
 					if (oldCovered == 0) {
 						lineCounter = lineCounter.increment(-1, +1);
+						if (isDiffLine) {
+							lineCounter = lineCounter.increment(-1, +1);
+						}
 					}
 				}
 			}

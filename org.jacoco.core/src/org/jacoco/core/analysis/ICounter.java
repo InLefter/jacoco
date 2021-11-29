@@ -60,6 +60,31 @@ public interface ICounter {
 	int PARTLY_COVERED = NOT_COVERED | FULLY_COVERED;
 
 	/**
+	 * 增量代码
+	 */
+	int DIFF_MAGIC = 0x10;
+
+	/**
+	 * Status flag for no diff items (value is 0x10).
+	 */
+	int DIFF_EMPTY = EMPTY | DIFF_MAGIC;
+
+	/**
+	 * Status flag when all diff items are not covered (value is 0x11).
+	 */
+	int DIFF_NOT_COVERED = NOT_COVERED | DIFF_MAGIC;
+
+	/**
+	 * Status flag when all diff items are covered (value is 0x12).
+	 */
+	int DIFF_FULLY_COVERED = FULLY_COVERED | DIFF_MAGIC;
+
+	/**
+	 * Status flag when diff items are partly covered (value is 0x13).
+	 */
+	int DIFF_PARTLY_COVERED = PARTLY_COVERED | DIFF_MAGIC;
+
+	/**
 	 * Returns the counter value of the given type.
 	 *
 	 * @param value

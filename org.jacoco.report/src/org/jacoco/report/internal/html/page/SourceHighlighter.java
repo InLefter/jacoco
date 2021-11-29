@@ -92,11 +92,20 @@ final class SourceHighlighter {
 		case ICounter.NOT_COVERED:
 			style = Styles.NOT_COVERED;
 			break;
+		case ICounter.DIFF_NOT_COVERED:
+			style = Styles.DIFF_NOT_COVERED;
+			break;
 		case ICounter.FULLY_COVERED:
 			style = Styles.FULLY_COVERED;
 			break;
 		case ICounter.PARTLY_COVERED:
 			style = Styles.PARTLY_COVERED;
+			break;
+		case ICounter.DIFF_FULLY_COVERED:
+			style = Styles.DIFF_FULLY_COVERED;
+			break;
+		case ICounter.DIFF_PARTLY_COVERED:
+			style = Styles.DIFF_PARTLY_COVERED;
 			break;
 		default:
 			return pre;
@@ -108,12 +117,21 @@ final class SourceHighlighter {
 		case ICounter.NOT_COVERED:
 			return span(pre, lineId, style, Styles.BRANCH_NOT_COVERED,
 					"All %2$d branches missed.", branches);
+		case ICounter.DIFF_NOT_COVERED:
+			return span(pre, lineId, style, Styles.DIFF_BRANCH_NOT_COVERED,
+					"All %2$d diff branches missed.", branches);
 		case ICounter.FULLY_COVERED:
 			return span(pre, lineId, style, Styles.BRANCH_FULLY_COVERED,
 					"All %2$d branches covered.", branches);
 		case ICounter.PARTLY_COVERED:
 			return span(pre, lineId, style, Styles.BRANCH_PARTLY_COVERED,
 					"%1$d of %2$d branches missed.", branches);
+		case ICounter.DIFF_FULLY_COVERED:
+			return span(pre, lineId, style, Styles.DIFF_BRANCH_FULLY_COVERED,
+					"All diff %2$d branches covered.", branches);
+		case ICounter.DIFF_PARTLY_COVERED:
+			return span(pre, lineId, style, Styles.DIFF_BRANCH_PARTLY_COVERED,
+					"%1$d of %2$d diff branches missed.", branches);
 		default:
 			return pre.span(style, lineId);
 		}

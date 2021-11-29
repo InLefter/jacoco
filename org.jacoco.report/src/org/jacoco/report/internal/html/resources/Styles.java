@@ -89,6 +89,15 @@ public final class Styles {
 	/** Part of source code where instructions are is fully covered */
 	public static final String FULLY_COVERED = "fc";
 
+	/** Part of diff source code where instructions are not covered */
+	public static final String DIFF_NOT_COVERED = "dnc";
+
+	/** Part of source code where diff instructions are partly covered */
+	public static final String DIFF_PARTLY_COVERED = "dpc";
+
+	/** Part of source code where diff instructions are is fully covered */
+	public static final String DIFF_FULLY_COVERED = "dfc";
+
 	/** Part of source code where branches are not covered */
 	public static final String BRANCH_NOT_COVERED = "bnc";
 
@@ -97,6 +106,15 @@ public final class Styles {
 
 	/** Part of source code where branches are fully covered */
 	public static final String BRANCH_FULLY_COVERED = "bfc";
+
+	/** Part of source code where branches are not covered */
+	public static final String DIFF_BRANCH_NOT_COVERED = "dbnc";
+
+	/** Part of source code where diff branches are partly covered */
+	public static final String DIFF_BRANCH_PARTLY_COVERED = "dbpc";
+
+	/** Part of source code where diff branches are fully covered */
+	public static final String DIFF_BRANCH_FULLY_COVERED = "dbfc";
 
 	/**
 	 * Returns a combined style from the given styles.

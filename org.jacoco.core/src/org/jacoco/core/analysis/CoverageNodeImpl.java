@@ -34,6 +34,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for lines */
 	protected CounterImpl lineCounter;
 
+	/** Counter for lines */
+	protected CounterImpl incLineCounter;
+
 	/** Counter for complexity. */
 	protected CounterImpl complexityCounter;
 
@@ -60,6 +63,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		this.methodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
 		this.lineCounter = CounterImpl.COUNTER_0_0;
+		this.incLineCounter = CounterImpl.COUNTER_0_0;
 	}
 
 	/**
@@ -73,6 +77,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 				.increment(child.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
 		lineCounter = lineCounter.increment(child.getLineCounter());
+		incLineCounter = incLineCounter.increment(child.getIncLineCounter());
 		complexityCounter = complexityCounter
 				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
@@ -114,6 +119,10 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return lineCounter;
 	}
 
+	public CounterImpl getIncLineCounter() {
+		return incLineCounter;
+	}
+
 	public ICounter getComplexityCounter() {
 		return complexityCounter;
 	}
@@ -134,6 +143,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 			return getBranchCounter();
 		case LINE:
 			return getLineCounter();
+		case INC_LINE:
+			return getIncLineCounter();
 		case COMPLEXITY:
 			return getComplexityCounter();
 		case METHOD:
@@ -153,6 +164,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		copy.instructionCounter = CounterImpl.getInstance(instructionCounter);
 		copy.branchCounter = CounterImpl.getInstance(branchCounter);
 		copy.lineCounter = CounterImpl.getInstance(lineCounter);
+		copy.incLineCounter = CounterImpl.getInstance(incLineCounter);
 		copy.complexityCounter = CounterImpl.getInstance(complexityCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);

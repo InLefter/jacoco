@@ -29,6 +29,8 @@ public abstract class LineImpl implements ILine {
 	private static final LineImpl[][][][] SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT
 			+ 1][][][];
 
+	private static final LineImpl[][][][] DIFF_SINGLETONS = new LineImpl[SINGLETON_INS_LIMIT + 1][][][];
+
 	static {
 		for (int i = 0; i <= SINGLETON_INS_LIMIT; i++) {
 			SINGLETONS[i] = new LineImpl[SINGLETON_INS_LIMIT + 1][][];
@@ -42,6 +44,19 @@ public abstract class LineImpl implements ILine {
 				}
 			}
 		}
+
+		for (int i = 0; i <= SINGLETON_INS_LIMIT; i++) {
+			DIFF_SINGLETONS[i] = new LineImpl[SINGLETON_INS_LIMIT + 1][][];
+			for (int j = 0; j <= SINGLETON_INS_LIMIT; j++) {
+				DIFF_SINGLETONS[i][j] = new LineImpl[SINGLETON_BRA_LIMIT + 1][];
+				for (int k = 0; k <= SINGLETON_BRA_LIMIT; k++) {
+					DIFF_SINGLETONS[i][j][k] = new LineImpl[SINGLETON_BRA_LIMIT + 1];
+					for (int l = 0; l <= SINGLETON_BRA_LIMIT; l++) {
+						DIFF_SINGLETONS[i][j][k][l] = new DiffFix(i, j, k, l);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -50,14 +65,14 @@ public abstract class LineImpl implements ILine {
 	public static final LineImpl EMPTY = SINGLETONS[0][0][0][0];
 
 	private static LineImpl getInstance(final CounterImpl instructions,
-			final CounterImpl branches) {
+			final CounterImpl branches, boolean isIncLine) {
 		final int im = instructions.getMissedCount();
 		final int ic = instructions.getCoveredCount();
 		final int bm = branches.getMissedCount();
 		final int bc = branches.getCoveredCount();
 		if (im <= SINGLETON_INS_LIMIT && ic <= SINGLETON_INS_LIMIT
 				&& bm <= SINGLETON_BRA_LIMIT && bc <= SINGLETON_BRA_LIMIT) {
-			return SINGLETONS[im][ic][bm][bc];
+			return isIncLine ? DIFF_SINGLETONS[im][ic][bm][bc] : SINGLETONS[im][ic][bm][bc];
 		}
 		return new Var(instructions, branches);
 	}
@@ -72,10 +87,15 @@ public abstract class LineImpl implements ILine {
 
 		@Override
 		public LineImpl increment(final ICounter instructions,
-				final ICounter branches) {
+				final ICounter branches, boolean isIncLine) {
 			this.instructions = this.instructions.increment(instructions);
 			this.branches = this.branches.increment(branches);
 			return this;
+		}
+
+		@Override
+		public boolean isDiffLine() {
+			return false;
 		}
 	}
 
@@ -90,9 +110,36 @@ public abstract class LineImpl implements ILine {
 
 		@Override
 		public LineImpl increment(final ICounter instructions,
-				final ICounter branches) {
+				final ICounter branches, boolean isIncLine) {
 			return getInstance(this.instructions.increment(instructions),
-					this.branches.increment(branches));
+					this.branches.increment(branches), isIncLine);
+		}
+
+		@Override
+		public boolean isDiffLine() {
+			return false;
+		}
+	}
+
+	/**
+	 * Immutable version.
+	 */
+	private static final class DiffFix extends LineImpl {
+		public DiffFix(final int im, final int ic, final int bm, final int bc) {
+			super(CounterImpl.getInstance(im, ic),
+					CounterImpl.getInstance(bm, bc));
+		}
+
+		@Override
+		public LineImpl increment(final ICounter instructions,
+								  final ICounter branches, boolean isIncLine) {
+			return getInstance(this.instructions.increment(instructions),
+					this.branches.increment(branches), isIncLine);
+		}
+
+		@Override
+		public boolean isDiffLine() {
+			return true;
 		}
 	}
 
@@ -118,12 +165,13 @@ public abstract class LineImpl implements ILine {
 	 * @return instance with new counter values
 	 */
 	public abstract LineImpl increment(final ICounter instructions,
-			final ICounter branches);
+			final ICounter branches, boolean isIncLine);
 
 	// === ILine implementation ===
 
 	public int getStatus() {
-		return instructions.getStatus() | branches.getStatus();
+		int status = instructions.getStatus() | branches.getStatus();
+		return isDiffLine() ? (status | ICounter.DIFF_MAGIC) : status;
 	}
 
 	public ICounter getInstructionCounter() {
@@ -133,6 +181,8 @@ public abstract class LineImpl implements ILine {
 	public ICounter getBranchCounter() {
 		return branches;
 	}
+
+	public abstract boolean isDiffLine();
 
 	@Override
 	public int hashCode() {
