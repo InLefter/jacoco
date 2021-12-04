@@ -16,6 +16,7 @@ import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
+import org.jacoco.core.internal.analysis.diff.DiffClassRegistry;
 
 import java.util.Arrays;
 
@@ -26,7 +27,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
 	private LineImpl[] lines;
 
-	private int[] incLines = new int[]{3, 4, 5, 6, 7};
+	private int[] incLines;
 
 	/** first line number in {@link #lines} */
 	private int offset;
@@ -43,6 +44,10 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		super(elementType, name);
 		lines = null;
 		offset = UNKNOWN_LINE;
+		if (elementType.equals(ElementType.CLASS) || elementType.equals(ElementType.SOURCEFILE)
+				|| elementType.equals(ElementType.METHOD)) {
+			incLines = DiffClassRegistry.getClassLines(name);
+		}
 	}
 
 	/**
@@ -92,6 +97,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		diffMethodCounter = diffMethodCounter.increment(child.getDiffMethodCounter());
+		diffClassCounter = diffClassCounter.increment(child.getDiffClassCounter());
 		final int firstLine = child.getFirstLine();
 		if (firstLine != UNKNOWN_LINE) {
 			final int lastLine = child.getLastLine();
@@ -140,6 +147,10 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		}
 		lines[line - offset] = l.increment(instructions, branches, isDiffLine);
 
+		if (isDiffLine) {
+			diffBranchCounter = diffBranchCounter.increment(branches);
+		}
+
 		// Increment line counter:
 		if (instructions.getTotalCount() > 0) {
 			if (instructions.getCoveredCount() == 0) {
@@ -148,7 +159,6 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 							.increment(CounterImpl.COUNTER_1_0);
 					if (isDiffLine) {
 						diffLineCounter = diffLineCounter.increment(CounterImpl.COUNTER_1_0);
-						diffBranchCounter = diffBranchCounter.increment(branches);
 					}
 				}
 			} else {
@@ -157,14 +167,12 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 							.increment(CounterImpl.COUNTER_0_1);
 					if (isDiffLine) {
 						diffLineCounter = diffLineCounter.increment(CounterImpl.COUNTER_0_1);
-						diffBranchCounter = diffBranchCounter.increment(branches);
 					}
 				} else {
 					if (oldCovered == 0) {
 						lineCounter = lineCounter.increment(-1, +1);
 						if (isDiffLine) {
 							diffLineCounter = diffLineCounter.increment(-1, +1);
-							diffBranchCounter = diffBranchCounter.increment(branches);
 						}
 					}
 				}

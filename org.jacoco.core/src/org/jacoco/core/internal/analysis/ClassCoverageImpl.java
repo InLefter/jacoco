@@ -17,6 +17,7 @@ import java.util.Collection;
 
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.IMethodCoverage;
+import org.jacoco.core.internal.analysis.diff.DiffClassRegistry;
 
 /**
  * Implementation of {@link IClassCoverage}.
@@ -65,6 +66,14 @@ public class ClassCoverageImpl extends SourceNodeImpl
 			this.classCounter = CounterImpl.COUNTER_0_1;
 		} else {
 			this.classCounter = CounterImpl.COUNTER_1_0;
+		}
+		// same as full class
+		if (DiffClassRegistry.getClassMethods(this.getName()) != null) {
+			if (diffMethodCounter.getCoveredCount() > 0) {
+				this.diffClassCounter = CounterImpl.COUNTER_0_1;
+			} else {
+				this.diffClassCounter = CounterImpl.COUNTER_1_0;
+			}
 		}
 	}
 

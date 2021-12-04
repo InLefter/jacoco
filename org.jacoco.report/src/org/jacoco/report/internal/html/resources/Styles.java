@@ -59,6 +59,8 @@ public final class Styles {
 	/** Table cells for a graphical bar */
 	public static final String BAR = "bar";
 
+	public static final String SIDE_BAR = "sidebar";
+
 	/** Table cells for the first column of a counter */
 	public static final String CTR1 = "ctr1";
 

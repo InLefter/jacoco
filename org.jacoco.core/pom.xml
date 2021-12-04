@@ -25,43 +25,6 @@
   <name>JaCoCo :: Core</name>
   <description>JaCoCo Core</description>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.runtime -->
-      <dependency>
-        <groupId>org.eclipse.platform</groupId>
-        <artifactId>org.eclipse.core.runtime</artifactId>
-        <version>3.12.0</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.equinox.common -->
-      <dependency>
-        <groupId>org.eclipse.platform</groupId>
-        <artifactId>org.eclipse.equinox.common</artifactId>
-        <version>3.9.0</version>
-      </dependency>
-
-      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.resources -->
-      <dependency>
-        <groupId>org.eclipse.platform</groupId>
-        <artifactId>org.eclipse.core.resources</artifactId>
-        <version>3.12.0</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.jobs -->
-      <dependency>
-        <groupId>org.eclipse.platform</groupId>
-        <artifactId>org.eclipse.core.jobs</artifactId>
-        <version>3.8.0</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.contenttype -->
-      <dependency>
-        <groupId>org.eclipse.platform</groupId>
-        <artifactId>org.eclipse.core.contenttype</artifactId>
-        <version>3.6.0</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>org.ow2.asm</groupId>

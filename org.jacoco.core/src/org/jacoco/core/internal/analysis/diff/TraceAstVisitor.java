@@ -126,4 +126,8 @@ public class TraceAstVisitor extends ASTVisitor {
 
         return madeMD5String;
     }
+
+    public List<MethodInfo> getMethodInfo() {
+        return methodInfo;
+    }
 }

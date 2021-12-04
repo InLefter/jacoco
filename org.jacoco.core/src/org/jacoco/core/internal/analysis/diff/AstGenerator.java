@@ -14,21 +14,25 @@ package org.jacoco.core.internal.analysis.diff;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
+import org.jacoco.core.internal.analysis.MethodInfo;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class AstGenerator {
-    public static void parseClassFile(String classFilePath) throws IOException {
+    public static List<MethodInfo> parseClassFile(String classFilePath){
         byte[] input = null;
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(
                 new FileInputStream(classFilePath));) {
             input = new byte[bufferedInputStream.available()];
             bufferedInputStream.read(input);
         } catch (final IOException e) {
-            throw e;
+            e.printStackTrace();
+            return Collections.emptyList();
         }
 
         ASTParser astParser = ASTParser.newParser(AST.JLS8);
@@ -43,9 +47,11 @@ public class AstGenerator {
         astParser.setSource(new String(input).toCharArray());
 
         CompilationUnit compilationUnit = (CompilationUnit) astParser.createAST(null);
-        ASTVisitor astVisitor = new TraceAstVisitor();
+        TraceAstVisitor astVisitor = new TraceAstVisitor();
         compilationUnit.accept(astVisitor);
+
         System.out.println(astVisitor);
+        return astVisitor.getMethodInfo();
     }
 
     public static void main(String[] args) throws IOException {

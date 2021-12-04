@@ -25,7 +25,7 @@ public class MethodCoverageImpl extends SourceNodeImpl
 
 	private final String signature;
 
-	private final MethodInfo methodInfo;
+	private final boolean isDiffMethod;
 
 	/**
 	 * Creates a method coverage data object with the given parameters.
@@ -39,7 +39,7 @@ public class MethodCoverageImpl extends SourceNodeImpl
 	 */
 	public MethodCoverageImpl(final String name, final String desc,
 			final String signature) {
-		this(name, desc, signature, null);
+		this(name, desc, signature, false);
 	}
 
 	/**
@@ -53,11 +53,11 @@ public class MethodCoverageImpl extends SourceNodeImpl
 	 *            generic signature or <code>null</code>
 	 */
 	public MethodCoverageImpl(final String name, final String desc,
-							  final String signature, final MethodInfo methodInfo) {
+							  final String signature, final boolean isDiffMethod) {
 		super(ElementType.METHOD, name);
 		this.desc = desc;
 		this.signature = signature;
-		this.methodInfo = methodInfo;
+		this.isDiffMethod = isDiffMethod;
 	}
 
 	@Override
@@ -82,6 +82,9 @@ public class MethodCoverageImpl extends SourceNodeImpl
 				: CounterImpl.COUNTER_0_1;
 		this.methodCounter = this.methodCounter.increment(base);
 		this.complexityCounter = this.complexityCounter.increment(base);
+		if (isDiffMethod) {
+			this.diffMethodCounter = this.diffMethodCounter.increment(base);
+		}
 	}
 
 	// === IMethodCoverage implementation ===
@@ -95,9 +98,6 @@ public class MethodCoverageImpl extends SourceNodeImpl
 	}
 
 	public boolean isDiffMethod() {
-		if (methodInfo == null) {
-			return false;
-		}
-		return true;
+		return isDiffMethod;
 	}
 }

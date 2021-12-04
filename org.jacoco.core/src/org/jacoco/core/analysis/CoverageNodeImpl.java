@@ -168,16 +168,22 @@ public class CoverageNodeImpl implements ICoverageNode {
 			return getInstructionCounter();
 		case BRANCH:
 			return getBranchCounter();
+		case DIFF_BRANCH:
+			return getDiffBranchCounter();
 		case LINE:
 			return getLineCounter();
-		case INC_LINE:
+		case DIFF_LINE:
 			return getDiffLineCounter();
 		case COMPLEXITY:
 			return getComplexityCounter();
 		case METHOD:
 			return getMethodCounter();
+		case DIFF_METHOD:
+			return getDiffMethodCounter();
 		case CLASS:
 			return getClassCounter();
+		case DIFF_CLASS:
+			return getDiffClassCounter();
 		}
 		throw new AssertionError(entity);
 	}

@@ -132,20 +132,33 @@ public class HTMLFormatter implements IHTMLReportContext {
 
 	private Table createTable() {
 		final Table t = new Table();
-		t.add("Element", null, new LabelColumn(), false);
-		t.add("Missed Instructions", Styles.BAR,
-				new BarColumn(CounterEntity.INSTRUCTION, locale), true);
-		t.add("Cov.", Styles.CTR2,
-				new PercentageColumn(CounterEntity.INSTRUCTION, locale), false);
-		t.add("Missed Branches", Styles.BAR,
-				new BarColumn(CounterEntity.BRANCH, locale), false);
-		t.add("Cov.", Styles.CTR2,
+		t.add("Full Coverage", Styles.SIDE_BAR, new LabelColumn(), false);
+		t.add("Class", Styles.CTR2,
+				new PercentageColumn(CounterEntity.CLASS, locale), false);
+		t.add("Method", Styles.CTR2,
+				new PercentageColumn(CounterEntity.METHOD, locale), false);
+		t.add("Line", Styles.CTR2,
+				new PercentageColumn(CounterEntity.LINE, locale), false);
+		t.add("Branches", Styles.CTR2,
 				new PercentageColumn(CounterEntity.BRANCH, locale), false);
-		addMissedTotalColumns(t, "Cxty", CounterEntity.COMPLEXITY);
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
-		addMissedTotalColumns(t, "DiffLines", CounterEntity.INC_LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
 		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
+
+		t.add("Diff Coverage", Styles.SIDE_BAR, new LabelColumn(), false);
+
+		t.add("Class", Styles.CTR2,
+				new PercentageColumn(CounterEntity.DIFF_CLASS, locale), false);
+		t.add("Method", Styles.CTR2,
+				new PercentageColumn(CounterEntity.DIFF_METHOD, locale), false);
+		t.add("Line", Styles.CTR2,
+				new PercentageColumn(CounterEntity.DIFF_LINE, locale), false);
+		t.add("Branches", Styles.CTR2,
+				new PercentageColumn(CounterEntity.DIFF_BRANCH, locale), false);
+		addMissedTotalColumns(t, "Lines", CounterEntity.DIFF_LINE);
+		addMissedTotalColumns(t, "Methods", CounterEntity.DIFF_METHOD);
+		addMissedTotalColumns(t, "Classes", CounterEntity.DIFF_CLASS);
+
 		return t;
 	}
 

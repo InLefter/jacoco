@@ -54,11 +54,14 @@ public interface ICoverageNode {
 		/** Counter for branches */
 		BRANCH,
 
+		/** Counter for diff branches */
+		DIFF_BRANCH,
+
 		/** Counter for source lines */
 		LINE,
 
-		/** Counter for source inc lines */
-		INC_LINE,
+		/** Counter for source diff lines */
+		DIFF_LINE,
 
 		/** Counter for cyclomatic complexity */
 		COMPLEXITY,
@@ -66,8 +69,14 @@ public interface ICoverageNode {
 		/** Counter for methods */
 		METHOD,
 
+		/** Counter for diff methods */
+		DIFF_METHOD,
+
 		/** Counter for classes */
-		CLASS
+		CLASS,
+
+		/** Counter for diff classes */
+		DIFF_CLASS
 	}
 
 	/**
