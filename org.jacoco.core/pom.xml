@@ -25,6 +25,43 @@
   <name>JaCoCo :: Core</name>
   <description>JaCoCo Core</description>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.runtime -->
+      <dependency>
+        <groupId>org.eclipse.platform</groupId>
+        <artifactId>org.eclipse.core.runtime</artifactId>
+        <version>3.12.0</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.equinox.common -->
+      <dependency>
+        <groupId>org.eclipse.platform</groupId>
+        <artifactId>org.eclipse.equinox.common</artifactId>
+        <version>3.9.0</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.resources -->
+      <dependency>
+        <groupId>org.eclipse.platform</groupId>
+        <artifactId>org.eclipse.core.resources</artifactId>
+        <version>3.12.0</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.jobs -->
+      <dependency>
+        <groupId>org.eclipse.platform</groupId>
+        <artifactId>org.eclipse.core.jobs</artifactId>
+        <version>3.8.0</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.core.contenttype -->
+      <dependency>
+        <groupId>org.eclipse.platform</groupId>
+        <artifactId>org.eclipse.core.contenttype</artifactId>
+        <version>3.6.0</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.ow2.asm</groupId>
@@ -38,6 +75,12 @@
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm-tree</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.core</artifactId>
+      <version>3.12.3</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -63,6 +106,14 @@
           <archive>
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
     </plugins>

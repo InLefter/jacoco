@@ -99,6 +99,13 @@ public interface ICoverageNode {
 	ICounter getBranchCounter();
 
 	/**
+	 * Returns the counter for diff branches.
+	 *
+	 * @return counter for branches
+	 */
+	ICounter getDiffBranchCounter();
+
+	/**
 	 * Returns the counter for lines.
 	 *
 	 * @return counter for lines
@@ -106,11 +113,11 @@ public interface ICoverageNode {
 	ICounter getLineCounter();
 
 	/**
-	 * Returns the counter for inc lines.
+	 * Returns the counter for diff lines.
 	 *
 	 * @return counter for lines
 	 */
-	ICounter getIncLineCounter();
+	ICounter getDiffLineCounter();
 
 	/**
 	 * Returns the counter for cyclomatic complexity.
@@ -127,11 +134,25 @@ public interface ICoverageNode {
 	ICounter getMethodCounter();
 
 	/**
+	 * Returns the counter for diff methods.
+	 *
+	 * @return counter for methods
+	 */
+	ICounter getDiffMethodCounter();
+
+	/**
 	 * Returns the counter for classes.
 	 *
 	 * @return counter for classes
 	 */
 	ICounter getClassCounter();
+
+	/**
+	 * Returns the counter for diff classes.
+	 *
+	 * @return counter for classes
+	 */
+	ICounter getDiffClassCounter();
 
 	/**
 	 * Generic access to the the counters.

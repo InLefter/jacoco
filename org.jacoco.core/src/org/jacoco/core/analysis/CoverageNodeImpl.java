@@ -28,14 +28,17 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for branches. */
 	protected CounterImpl branchCounter;
 
+	/** Counter for diff branches. */
+	protected CounterImpl diffBranchCounter;
+
 	/** Counter for instructions. */
 	protected CounterImpl instructionCounter;
 
 	/** Counter for lines */
 	protected CounterImpl lineCounter;
 
-	/** Counter for lines */
-	protected CounterImpl incLineCounter;
+	/** Counter for diff lines */
+	protected CounterImpl diffLineCounter;
 
 	/** Counter for complexity. */
 	protected CounterImpl complexityCounter;
@@ -43,8 +46,14 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for methods. */
 	protected CounterImpl methodCounter;
 
+	/** Counter for diff methods. */
+	protected CounterImpl diffMethodCounter;
+
 	/** Counter for classes. */
 	protected CounterImpl classCounter;
+
+	/** Counter for diff classes. */
+	protected CounterImpl diffClassCounter;
 
 	/**
 	 * Creates a new coverage data node.
@@ -58,12 +67,15 @@ public class CoverageNodeImpl implements ICoverageNode {
 		this.elementType = elementType;
 		this.name = name;
 		this.branchCounter = CounterImpl.COUNTER_0_0;
+		this.diffBranchCounter = CounterImpl.COUNTER_0_0;
 		this.instructionCounter = CounterImpl.COUNTER_0_0;
 		this.complexityCounter = CounterImpl.COUNTER_0_0;
 		this.methodCounter = CounterImpl.COUNTER_0_0;
+		this.diffMethodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
+		this.diffClassCounter = CounterImpl.COUNTER_0_0;
 		this.lineCounter = CounterImpl.COUNTER_0_0;
-		this.incLineCounter = CounterImpl.COUNTER_0_0;
+		this.diffLineCounter = CounterImpl.COUNTER_0_0;
 	}
 
 	/**
@@ -76,12 +88,15 @@ public class CoverageNodeImpl implements ICoverageNode {
 		instructionCounter = instructionCounter
 				.increment(child.getInstructionCounter());
 		branchCounter = branchCounter.increment(child.getBranchCounter());
+		diffBranchCounter = diffBranchCounter.increment(child.getDiffBranchCounter());
 		lineCounter = lineCounter.increment(child.getLineCounter());
-		incLineCounter = incLineCounter.increment(child.getIncLineCounter());
+		diffLineCounter = diffLineCounter.increment(child.getDiffLineCounter());
 		complexityCounter = complexityCounter
 				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
+		diffMethodCounter = diffMethodCounter.increment(child.getDiffMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		diffClassCounter = diffClassCounter.increment(child.getDiffClassCounter());
 	}
 
 	/**
@@ -115,12 +130,16 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return branchCounter;
 	}
 
+	public CounterImpl getDiffBranchCounter() {
+		return diffBranchCounter;
+	}
+
 	public ICounter getLineCounter() {
 		return lineCounter;
 	}
 
-	public CounterImpl getIncLineCounter() {
-		return incLineCounter;
+	public CounterImpl getDiffLineCounter() {
+		return diffLineCounter;
 	}
 
 	public ICounter getComplexityCounter() {
@@ -131,8 +150,16 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return methodCounter;
 	}
 
+	public CounterImpl getDiffMethodCounter() {
+		return diffMethodCounter;
+	}
+
 	public ICounter getClassCounter() {
 		return classCounter;
+	}
+
+	public CounterImpl getDiffClassCounter() {
+		return diffClassCounter;
 	}
 
 	public ICounter getCounter(final CounterEntity entity) {
@@ -144,7 +171,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		case LINE:
 			return getLineCounter();
 		case INC_LINE:
-			return getIncLineCounter();
+			return getDiffLineCounter();
 		case COMPLEXITY:
 			return getComplexityCounter();
 		case METHOD:
@@ -163,11 +190,14 @@ public class CoverageNodeImpl implements ICoverageNode {
 		final CoverageNodeImpl copy = new CoverageNodeImpl(elementType, name);
 		copy.instructionCounter = CounterImpl.getInstance(instructionCounter);
 		copy.branchCounter = CounterImpl.getInstance(branchCounter);
+		copy.diffBranchCounter = CounterImpl.getInstance(diffBranchCounter);
 		copy.lineCounter = CounterImpl.getInstance(lineCounter);
-		copy.incLineCounter = CounterImpl.getInstance(incLineCounter);
+		copy.diffLineCounter = CounterImpl.getInstance(diffLineCounter);
 		copy.complexityCounter = CounterImpl.getInstance(complexityCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
+		copy.diffMethodCounter = CounterImpl.getInstance(diffMethodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);
+		copy.diffClassCounter = CounterImpl.getInstance(diffClassCounter);
 		return copy;
 	}
 

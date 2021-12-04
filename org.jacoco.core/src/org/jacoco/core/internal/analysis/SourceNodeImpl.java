@@ -131,7 +131,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		final LineImpl l = getLine(line);
 		final int oldTotal = l.getInstructionCounter().getTotalCount();
 		final int oldCovered = l.getInstructionCounter().getCoveredCount();
-		boolean isDiffLine = false;
+		boolean isDiffLine;
 		if (l == LineImpl.EMPTY) {
 			//
 			isDiffLine = incLines != null && Arrays.binarySearch(incLines, line) >= 0;
@@ -147,7 +147,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 					lineCounter = lineCounter
 							.increment(CounterImpl.COUNTER_1_0);
 					if (isDiffLine) {
-						incLineCounter = incLineCounter.increment(CounterImpl.COUNTER_1_0);
+						diffLineCounter = diffLineCounter.increment(CounterImpl.COUNTER_1_0);
+						diffBranchCounter = diffBranchCounter.increment(branches);
 					}
 				}
 			} else {
@@ -155,13 +156,15 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 					lineCounter = lineCounter
 							.increment(CounterImpl.COUNTER_0_1);
 					if (isDiffLine) {
-						incLineCounter = incLineCounter.increment(CounterImpl.COUNTER_0_1);
+						diffLineCounter = diffLineCounter.increment(CounterImpl.COUNTER_0_1);
+						diffBranchCounter = diffBranchCounter.increment(branches);
 					}
 				} else {
 					if (oldCovered == 0) {
 						lineCounter = lineCounter.increment(-1, +1);
 						if (isDiffLine) {
-							lineCounter = lineCounter.increment(-1, +1);
+							diffLineCounter = diffLineCounter.increment(-1, +1);
+							diffBranchCounter = diffBranchCounter.increment(branches);
 						}
 					}
 				}
