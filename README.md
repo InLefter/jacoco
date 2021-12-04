@@ -15,3 +15,27 @@ for questions regarding JaCoCo which are not already covered by the
 
 Note: We do not answer general questions in the project's issue tracker. Please use our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/jacoco) for this.
 -------------------------------------------------------------------------
+
+***
+
+## **Ability For Diff**
+
+Added the ability to report a java-code-diff coverage, You only need to implement internal methods as needed.
+
+[DiffClassRegistry](https://github.com/InLefter/jacoco/blob/master/org.jacoco.core/src/org/jacoco/core/internal/analysis/diff/DiffClassRegistry.java)
+
+```
+    public static List<MethodInfo> getClassMethods(String className) {
+        return classMethods.get(className);
+    }
+
+    public static int[] getClassLines(String className) {
+        return ...;
+    }
+```
+
+demo:
+
+![](demo/jacoco_demo.png)
+
+![](demo/jacoco_demo_diff_highlight.png)

@@ -19,12 +19,27 @@ import java.util.List;
 import java.util.Map;
 
 public class DiffClassRegistry {
+    /**
+     * Diff class with method info
+     */
     private static final Map<String, List<MethodInfo>> classMethods = new HashMap<>();
 
+    /**
+     * get all methods' info by a diff class name with full package.
+     *
+     * @param className class name with full package
+     * @return methods' info
+     */
     public static List<MethodInfo> getClassMethods(String className) {
         return classMethods.get(className);
     }
 
+    /**
+     * get diff lines by a diff class name with full package.
+     *
+     * @param className class name with full package
+     * @return diff lines
+     */
     public static int[] getClassLines(String className) {
         return new int[]{3, 4, 5, 6, 7};
     }
