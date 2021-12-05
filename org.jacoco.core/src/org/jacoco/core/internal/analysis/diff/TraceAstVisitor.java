@@ -13,7 +13,6 @@
 package org.jacoco.core.internal.analysis.diff;
 
 import org.eclipse.jdt.core.dom.*;
-import org.jacoco.core.internal.analysis.MethodInfo;
 import sun.misc.BASE64Encoder;
 
 import java.nio.charset.StandardCharsets;

@@ -68,7 +68,7 @@ public class ClassCoverageImpl extends SourceNodeImpl
 			this.classCounter = CounterImpl.COUNTER_1_0;
 		}
 		// same as full class
-		if (DiffClassRegistry.getClassMethods(this.getName()) != null) {
+		if (DiffClassRegistry.getDiffMethodsOfClass(this.getName()) != null) {
 			if (diffMethodCounter.getCoveredCount() > 0) {
 				this.diffClassCounter = CounterImpl.COUNTER_0_1;
 			} else {

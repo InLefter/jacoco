@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jacoco.core.internal.analysis.diff.DiffClassRegistry;
+import org.jacoco.core.internal.analysis.diff.MethodInfo;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
@@ -121,7 +122,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		filter.filter(methodNode, this, mcc);
 		String className = coverage.getName();
 		String methodName = methodNode.name;
-		List<MethodInfo> classMethods = DiffClassRegistry.getClassMethods(className);
+		List<MethodInfo> classMethods = DiffClassRegistry.getDiffMethodsOfClass(className);
 		boolean isDiffMethod = classMethods != null && classMethods.stream().anyMatch(methodInfo -> methodInfo.methodName.equals(methodName));
 
 		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,

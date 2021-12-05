@@ -14,7 +14,6 @@ package org.jacoco.core.internal.analysis.diff;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
-import org.jacoco.core.internal.analysis.MethodInfo;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -35,6 +34,10 @@ public class AstGenerator {
             return Collections.emptyList();
         }
 
+        return parseClassContent(new String(input));
+    }
+
+    public static List<MethodInfo> parseClassContent(String javaContent) {
         ASTParser astParser = ASTParser.newParser(AST.JLS8);
         Map<String, String> options = JavaCore.getOptions();
 
@@ -44,13 +47,12 @@ public class AstGenerator {
         astParser.setResolveBindings(true);
         astParser.setBindingsRecovery(true);
         astParser.setStatementsRecovery(true);
-        astParser.setSource(new String(input).toCharArray());
+        astParser.setSource(javaContent.toCharArray());
 
         CompilationUnit compilationUnit = (CompilationUnit) astParser.createAST(null);
         TraceAstVisitor astVisitor = new TraceAstVisitor();
         compilationUnit.accept(astVisitor);
 
-        System.out.println(astVisitor);
         return astVisitor.getMethodInfo();
     }
 

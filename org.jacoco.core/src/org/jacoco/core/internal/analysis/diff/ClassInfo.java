@@ -10,28 +10,25 @@
  *    Marc R. Hoffmann - initial API and implementation
  *
  *******************************************************************************/
-package org.jacoco.core.internal.analysis;
+package org.jacoco.core.internal.analysis.diff;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MethodInfo {
+public class ClassInfo {
     public String className;
-    public String md5;
-    public String methodName;
-    public List<String> paramList = new ArrayList<>();
-    public String methodBody;
-    public boolean isAnonymousClass;
+
+    public List<MethodInfo> diffMethod;
+
+    public ClassInfo(String className, List<MethodInfo> diffMethod) {
+        this.className = className;
+        this.diffMethod = diffMethod;
+    }
 
     @Override
     public String toString() {
-        return "MethodInfo{" +
+        return "ClassInfo{" +
                 "className='" + className + '\'' +
-                ", md5='" + md5 + '\'' +
-                ", methodName='" + methodName + '\'' +
-                ", paramList=" + paramList +
-                ", methodBody='" + methodBody + '\'' +
-                ", isAnonymousClass=" + isAnonymousClass +
+                ", diffMethod=" + diffMethod +
                 '}';
     }
 }
