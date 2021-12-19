@@ -30,6 +30,7 @@ import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.internal.analysis.diff.DiffClassRegistry;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
@@ -157,6 +158,8 @@ final class ReportSupport {
 		final CoverageBuilder builder = new CoverageBuilder();
 		final File classesDir = new File(
 				project.getBuild().getOutputDirectory());
+
+		DiffClassRegistry.init();
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(

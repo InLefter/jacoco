@@ -54,7 +54,22 @@ public class MethodCoverageImpl extends SourceNodeImpl
 	 */
 	public MethodCoverageImpl(final String name, final String desc,
 							  final String signature, final boolean isDiffMethod) {
-		super(ElementType.METHOD, name);
+		this(name, desc, signature, isDiffMethod, null);
+	}
+
+	/**
+	 * Creates a method coverage data object with the given parameters.
+	 *
+	 * @param name
+	 *            name of the method
+	 * @param desc
+	 *            method descriptor
+	 * @param signature
+	 *            generic signature or <code>null</code>
+	 */
+	public MethodCoverageImpl(final String name, final String desc,
+							  final String signature, final boolean isDiffMethod, final String sourceFile) {
+		super(ElementType.METHOD, name, sourceFile);
 		this.desc = desc;
 		this.signature = signature;
 		this.isDiffMethod = isDiffMethod;

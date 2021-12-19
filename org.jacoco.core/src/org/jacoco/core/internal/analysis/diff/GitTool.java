@@ -27,6 +27,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -43,7 +44,13 @@ public class GitTool {
         String clientPath = "D:\\Dev\\jacoco\\.git";
         String currentBranch = "master";
         String baseBranch = "master_bak";
-        System.out.println(getDiffs(clientPath, currentBranch, baseBranch));
+        try (Repository repository = new FileRepository(clientPath); Git git = new Git(repository)) {
+            System.out.println(git);
+            System.out.println(repository.getFullBranch());
+            RevWalk walk = new RevWalk(repository);
+            System.out.println(walk);
+        }
+//        System.out.println(getDiffs(new File(clientPath), currentBranch, baseBranch));
     }
 
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(10);
@@ -57,12 +64,20 @@ public class GitTool {
      * @return
      */
     public static List<ClassInfo> getDiffs(String clientPath, String currentBranch, String baseBranch) {
-        try (Repository repository = new FileRepository(clientPath); Git git = new Git(repository)) {
+        try (Repository repository = new FileRepository(clientPath + File.separator + ".git"); Git git =
+                new Git(repository)) {
 
             CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
             CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
+            String currentRef;
 
-            RevTree newTree = prepareTreeParser(repository, "refs/heads/" + currentBranch, newTreeParser);
+            if (isEmpty(currentBranch)) {
+                currentRef = repository.getFullBranch();
+            } else {
+                currentRef = "refs/heads/" + currentBranch;
+            }
+
+            RevTree newTree = prepareTreeParser(repository, currentRef, newTreeParser);
             RevTree oldTree = prepareTreeParser(repository, "refs/heads/" + baseBranch, oldTreeParser);
 
             List<DiffEntry> diff =
@@ -81,7 +96,7 @@ public class GitTool {
 
             List<CompletableFuture<ClassInfo>> futures = new ArrayList<>();
             for (DiffEntry entry : diff) {
-                String[] classFile = entry.getNewPath().split("src/(main/java)?");
+                String[] classFile = entry.getNewPath().split("src/(main/java/)?");
                 if (classFile.length < 2) {
                     continue;
                 }
@@ -101,10 +116,9 @@ public class GitTool {
                         .collect(Collectors.toList());
                 int[][] lineRange = new int[collect.size()][2];
                 for (int i = 0; i < collect.size(); i++) {
-                    lineRange[i][0] = collect.get(i).getBeginB();
-                    lineRange[i][1] = collect.get(i).getEndB();
+                    lineRange[i][0] = collect.get(i).getBeginB() + 1;
+                    lineRange[i][1] = collect.get(i).getEndB() + 1;
                 }
-                DiffClassRegistry.putDiffLinesOfClass(className, lineRange);
 
                 CompletableFuture<ClassInfo> future = CompletableFuture.supplyAsync(() -> {
                     List<MethodInfo> diffMethods;
@@ -123,19 +137,19 @@ public class GitTool {
                                 newMethodInfo.stream().filter(methodInfo -> !oldMethodMd5List.contains(methodInfo.md5))
                                         .collect(Collectors.toList());
                     }
-                    return new ClassInfo(className, diffMethods);
+                    return new ClassInfo(className, classFile[1], diffMethods, lineRange);
                 }, EXECUTOR);
                 futures.add(future);
             }
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
             return futures.stream().map(CompletableFuture::join).filter(Objects::nonNull).collect(Collectors.toList());
-        } catch (IOException | GitAPIException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
         }
     }
 
-    private static List<MethodInfo> getMethodInfoList(Repository repository, RevTree newTree, String fileName){
+    private static List<MethodInfo> getMethodInfoList(Repository repository, RevTree newTree, String fileName) {
         String javaContent;
         if (fileName.equals("/dev/null")) {
             return Collections.emptyList();
@@ -173,5 +187,9 @@ public class GitTool {
                 return new String(bytes, StandardCharsets.UTF_8);
             }
         }
+    }
+
+    private static boolean isEmpty(String str) {
+        return str == null || str.isEmpty();
     }
 }

@@ -39,6 +39,7 @@ import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.internal.analysis.diff.DiffClassRegistry;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.jacoco.report.FileMultiReportOutput;
 import org.jacoco.report.IMultiReportOutput;
@@ -490,6 +491,8 @@ public class ReportTask extends Task {
 	public void execute() throws BuildException {
 		loadExecutionData();
 		try {
+			DiffClassRegistry.init();
+
 			final IReportVisitor visitor = createVisitor();
 			visitor.visitInfo(sessionInfoStore.getInfos(),
 					executionDataStore.getContents());

@@ -17,17 +17,24 @@ import java.util.List;
 public class ClassInfo {
     public String className;
 
+    public String sourceFile;
+
     public List<MethodInfo> diffMethod;
 
-    public ClassInfo(String className, List<MethodInfo> diffMethod) {
+    public int[][] classLineRanges;
+
+    public ClassInfo(String className, String sourceFile, List<MethodInfo> diffMethod, int[][] classLineRanges) {
         this.className = className;
+        this.sourceFile = sourceFile;
         this.diffMethod = diffMethod;
+        this.classLineRanges = classLineRanges;
     }
 
     @Override
     public String toString() {
         return "ClassInfo{" +
                 "className='" + className + '\'' +
+                ", sourceFile='" + sourceFile + '\'' +
                 ", diffMethod=" + diffMethod +
                 '}';
     }

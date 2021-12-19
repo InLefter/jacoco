@@ -27,10 +27,25 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 
 	private LineImpl[] lines;
 
-	private int[] incLines;
+	private int[][] diffineRanges;
 
 	/** first line number in {@link #lines} */
 	private int offset;
+
+	/**
+	 * Create a new source node implementation instance.
+	 *
+	 * @param elementType
+	 *            element type
+	 * @param name
+	 *            name of the element
+	 */
+	public SourceNodeImpl(final ElementType elementType, final String name, final String sourceFile) {
+		this(elementType, name);
+		if (elementType.equals(ElementType.METHOD)) {
+			diffineRanges = DiffClassRegistry.getClassDiffLines(sourceFile);
+		}
+	}
 
 	/**
 	 * Create a new source node implementation instance.
@@ -44,9 +59,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		super(elementType, name);
 		lines = null;
 		offset = UNKNOWN_LINE;
-		if (elementType.equals(ElementType.CLASS) || elementType.equals(ElementType.SOURCEFILE)
-				|| elementType.equals(ElementType.METHOD)) {
-			incLines = DiffClassRegistry.getClassLines(name);
+		if (elementType.equals(ElementType.CLASS) || elementType.equals(ElementType.SOURCEFILE)) {
+			diffineRanges = DiffClassRegistry.getClassDiffLines(name);
 		}
 	}
 
@@ -132,6 +146,24 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		branchCounter = branchCounter.increment(branches);
 	}
 
+	private static int binarySearchInRange(int[][] ranges, int targetRange) {
+		int low = 0;
+		int high = ranges.length - 1;
+
+		while (low <= high) {
+			int mid = (low + high) >>> 1;
+			int[] range = ranges[mid];
+			if (targetRange < range[0]) {
+				high = mid - 1;
+			} else if (targetRange >= range[1]) {
+				low = mid + 1;
+			} else {
+				return mid;
+			}
+		}
+		return -(low + 1);  // key not found.
+	}
+
 	private void incrementLine(final ICounter instructions,
 			final ICounter branches, final int line) {
 		ensureCapacity(line, line);
@@ -140,8 +172,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 		final int oldCovered = l.getInstructionCounter().getCoveredCount();
 		boolean isDiffLine;
 		if (l == LineImpl.EMPTY) {
-			//
-			isDiffLine = incLines != null && Arrays.binarySearch(incLines, line) >= 0;
+			// search target in diff range
+			isDiffLine = diffineRanges != null && binarySearchInRange(diffineRanges, line) >= 0;
 		} else {
 			isDiffLine = l.isDiffLine();
 		}

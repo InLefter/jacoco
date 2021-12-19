@@ -126,7 +126,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		boolean isDiffMethod = classMethods != null && classMethods.stream().anyMatch(methodInfo -> methodInfo.methodName.equals(methodName));
 
 		final MethodCoverageImpl mc = new MethodCoverageImpl(name, desc,
-				signature, isDiffMethod);
+				signature, isDiffMethod, getSourceFileName());
 		mcc.calculate(mc);
 
 		if (mc.containsCode()) {

@@ -25,6 +25,8 @@ public class DiffClassRegistry {
 
     private static final String MERGE_REQ_ID = System.getProperty(JACOCO_MERGE_ID);
 
+    private static boolean DIFF_INIT_FLAG = false;
+
     /**
      * Diff class with method info
      */
@@ -58,12 +60,13 @@ public class DiffClassRegistry {
 
     /**
      * get diff lines by a diff class name with full package.
+     * diff line range with format in [begin, end)
      *
      * @param className class name with full package
      * @return diff lines
      */
-    public static int[] getClassLines(String className) {
-        return new int[]{3, 4, 5, 6, 7};
+    public static int[][] getClassDiffLines(String className) {
+        return classLineRanges.get(className);
     }
 
     /**
@@ -77,6 +80,20 @@ public class DiffClassRegistry {
     }
 
     /**
+     * parse diff class info include diff lines and diff methods.
+     *
+     * @param classInfo
+     */
+    public static void parseDiffClassInfo(List<ClassInfo> classInfo) {
+        for (ClassInfo info : classInfo) {
+            classLineRanges.put(info.className, info.classLineRanges);
+            classLineRanges.put(info.sourceFile, info.classLineRanges);
+
+            classMethods.put(info.className, info.diffMethod);
+        }
+    }
+
+    /**
      * whether task with diff report
      *
      * @return is diff mode
@@ -86,16 +103,18 @@ public class DiffClassRegistry {
     }
 
     public static void init() {
+        if (DIFF_INIT_FLAG) {
+            return;
+        }
+        DIFF_INIT_FLAG = true;
         System.out.println("==> begin to init");
         String baseBranch = System.getProperty("baseBranch");
         String curBranch = System.getProperty("curBranch");
         String projectDir = System.getProperty("projectDir");
-        if (baseBranch.isEmpty() || curBranch.isEmpty() || projectDir.isEmpty()) {
+        if (isEmpty(baseBranch) || isEmpty(projectDir)) {
             return;
         }
-        GitTool.getDiffs(projectDir, curBranch, baseBranch).forEach(classInfo -> {
-            DiffClassRegistry.putDiffMethodsOfClass(classInfo.className, classInfo.diffMethod);
-        });
+        DiffClassRegistry.parseDiffClassInfo(GitTool.getDiffs(projectDir, curBranch, baseBranch));
     }
 
     private static boolean isEmpty(String str) {
